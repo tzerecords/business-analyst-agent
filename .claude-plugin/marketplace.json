@@ -1,5 +1,5 @@
 {
-  "name": "matias-was",
+  "name": "business-analyst-agent",
   "description": "Business analysis skills for Claude Code, published one skill at a time.",
   "owner": {
     "name": "Matias Was",
@@ -14,7 +14,7 @@
       "author": {
         "name": "Matias Was"
       },
-      "homepage": "https://github.com/tzerecords/matias-was",
+      "homepage": "https://github.com/tzerecords/business-analyst-agent",
       "license": "MIT",
       "keywords": [
         "bpmn",

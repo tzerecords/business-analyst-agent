@@ -40,11 +40,11 @@ plugin. These are two separate prompts inside Claude Code, and the install will
 not work if they are sent as one:
 
 ```
-/plugin marketplace add tzerecords/matias-was
+/plugin marketplace add tzerecords/business-analyst-agent
 ```
 
 ```
-/plugin install business-analyst@matias-was
+/plugin install business-analyst@business-analyst-agent
 ```
 
 Skill name after installing: `/business-analyst:bpmn`.
@@ -53,25 +53,25 @@ Skill name after installing: `/business-analyst:bpmn`.
 and no change to your Claude Code configuration:
 
 ```bash
-git clone https://github.com/tzerecords/matias-was /tmp/matias-was
-cp -r /tmp/matias-was/bpmn ~/.claude/skills/bpmn
+git clone https://github.com/tzerecords/business-analyst-agent /tmp/business-analyst-agent
+cp -r /tmp/business-analyst-agent/bpmn ~/.claude/skills/bpmn
 ```
 
 Symlinking works the same way and keeps the checkout as the single copy:
-`ln -s /tmp/matias-was/bpmn ~/.claude/skills/bpmn`. Skill name after installing:
+`ln -s /tmp/business-analyst-agent/bpmn ~/.claude/skills/bpmn`. Skill name after installing:
 `/bpmn`.
 
 **Codex.**
 
 ```bash
-codex plugin marketplace add tzerecords/matias-was
-codex plugin add business-analyst@matias-was
+codex plugin marketplace add tzerecords/business-analyst-agent
+codex plugin add business-analyst@business-analyst-agent
 ```
 
 **Gemini CLI.**
 
 ```bash
-gemini extensions install https://github.com/tzerecords/matias-was
+gemini extensions install https://github.com/tzerecords/business-analyst-agent
 ```
 
 **Any coding tool that reads AGENTS.md.** Clone the repository and open it as
@@ -80,8 +80,8 @@ markdown, short enough to sit in context for a whole session, so the scripts run
 with no plugin and no marketplace:
 
 ```bash
-git clone https://github.com/tzerecords/matias-was
-cd matias-was/bpmn && npm install
+git clone https://github.com/tzerecords/business-analyst-agent
+cd business-analyst-agent/bpmn && npm install
 ```
 
 **Without any coding agent at all.** Generator and checker are plain Node
@@ -89,8 +89,8 @@ scripts, and neither one calls a language model. Run the worked example first,
 then write your own spec against the format documented in `bpmn/SKILL.md`:
 
 ```bash
-git clone https://github.com/tzerecords/matias-was
-cd matias-was/bpmn
+git clone https://github.com/tzerecords/business-analyst-agent
+cd business-analyst-agent/bpmn
 npm install
 node scripts/generate.mjs examples/purchase-request.spec.json out.bpmn
 node scripts/check.mjs out.bpmn --out ./render --page 1600x1000

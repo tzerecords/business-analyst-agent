@@ -6,8 +6,8 @@
     "name": "Matias Was",
     "url": "https://github.com/tzerecords"
   },
-  "homepage": "https://github.com/tzerecords/matias-was",
-  "repository": "https://github.com/tzerecords/matias-was",
+  "homepage": "https://github.com/tzerecords/business-analyst-agent",
+  "repository": "https://github.com/tzerecords/business-analyst-agent",
   "license": "MIT",
   "keywords": ["bpmn", "business-analysis", "process-modeling", "diagram"],
   "skills": "./",
@@ -18,7 +18,7 @@
     "developerName": "Matias Was",
     "category": "Productivity",
     "capabilities": ["Skills"],
-    "websiteURL": "https://github.com/tzerecords/matias-was",
+    "websiteURL": "https://github.com/tzerecords/business-analyst-agent",
     "defaultPrompt": [
       "Map our order to cash process as a BPMN diagram from these interview notes.",
       "Draw the purchase approval flow, with finance as a separate lane and the supplier as an outside party.",

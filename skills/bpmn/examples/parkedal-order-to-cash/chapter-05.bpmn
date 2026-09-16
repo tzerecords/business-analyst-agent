@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_ch05" name="Shipment and invoice" targetNamespace="urn:parkedal:order-to-cash" exporter="chapters/tooling/layout.mjs (deterministic)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_ch05">
+    <bpmn:participant id="P_Park" name="Parkedal / Pamatec" processRef="Proc_ch05" />
+    <bpmn:participant id="P_Cliente" name="Client" />
+    <bpmn:participant id="P_Prov" name="Supplier (one or more factories)" />
+    <bpmn:participant id="P_Fwd" name="Freight forwarder (client’s)" />
+    <bpmn:messageFlow id="m11" name="Bill of lading" sourceRef="P_Fwd" targetRef="T_RecBL" />
+    <bpmn:messageFlow id="m12" name="Packing list" sourceRef="P_Prov" targetRef="T_RecPL" />
+    <bpmn:messageFlow id="m13" name="Invoice draft" sourceRef="T_SendInv" targetRef="P_Cliente" />
+    <bpmn:messageFlow id="m14" name="Invoice approval" sourceRef="P_Cliente" targetRef="T_RecInvAppr" />
+    <bpmn:messageFlow id="m15" name="Packing list with invoice number" sourceRef="T_SendPL" targetRef="P_Cliente" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_ch05" name="Parkedal / Pamatec" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_ch05">
+      <bpmn:lane id="L_Comex" name="Foreign trade / Administration">
+        <bpmn:flowNodeRef>G_Par</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RecBL</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RecPL</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_CreateInv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_CorrectInv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_SendInv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RecInvAppr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Fiscal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_SendPL</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Pend</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>start_f29</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_f46</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Sys" name="System">
+        <bpmn:flowNodeRef>ST_InvLines</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_CoB</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_InvPark</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_InvPam</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_MarkShipped</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:parallelGateway id="G_Par" name=""><bpmn:incoming>bf_f29</bpmn:incoming><bpmn:outgoing>f30</bpmn:outgoing><bpmn:outgoing>f31</bpmn:outgoing></bpmn:parallelGateway>
+    <bpmn:userTask id="T_RecBL" name="Record bill of lading"><bpmn:incoming>f30</bpmn:incoming><bpmn:outgoing>f32</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T_RecPL" name="Record packing list"><bpmn:incoming>f31</bpmn:incoming><bpmn:outgoing>f33</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T_CreateInv" name="Create the invoice for the shipment"><bpmn:incoming>f32</bpmn:incoming><bpmn:incoming>f33</bpmn:incoming><bpmn:outgoing>f34b</bpmn:outgoing></bpmn:userTask>
+    <bpmn:serviceTask id="ST_InvLines" name="Generate invoice lines"><bpmn:incoming>f34b</bpmn:incoming><bpmn:outgoing>f35</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:userTask id="T_CorrectInv" name="Correct invoice lines against the packing list"><bpmn:incoming>f35</bpmn:incoming><bpmn:outgoing>f35b</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="G_CoB" name="Which company issues the invoice?"><bpmn:incoming>f35b</bpmn:incoming><bpmn:outgoing>f36</bpmn:outgoing><bpmn:outgoing>f37</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ST_InvPark" name="Draft commercial invoice (Parkedal)"><bpmn:incoming>f36</bpmn:incoming><bpmn:outgoing>f38</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:serviceTask id="ST_InvPam" name="Draft commercial invoice (Pamatec)"><bpmn:incoming>f37</bpmn:incoming><bpmn:outgoing>f39</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:userTask id="T_SendInv" name="Send invoice draft for approval"><bpmn:incoming>f38</bpmn:incoming><bpmn:incoming>f39</bpmn:incoming><bpmn:outgoing>f41</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T_RecInvAppr" name="Record client invoice approval"><bpmn:incoming>f41</bpmn:incoming><bpmn:outgoing>f42</bpmn:outgoing></bpmn:userTask>
+    <bpmn:task id="T_Fiscal" name="Issue fiscal e‑invoice"><bpmn:incoming>f42</bpmn:incoming><bpmn:outgoing>f43</bpmn:outgoing></bpmn:task>
+    <bpmn:serviceTask id="ST_MarkShipped" name="Mark order lines shipped"><bpmn:incoming>f43</bpmn:incoming><bpmn:outgoing>f44</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:task id="T_SendPL" name="Edit packing‑list header and send it"><bpmn:incoming>f44</bpmn:incoming><bpmn:outgoing>f45</bpmn:outgoing></bpmn:task>
+    <bpmn:exclusiveGateway id="G_Pend" name="Units still pending?"><bpmn:incoming>f45</bpmn:incoming><bpmn:outgoing>f47</bpmn:outgoing><bpmn:outgoing>bf_f46</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="E1" name="Order shipped and invoiced"><bpmn:incoming>f47</bpmn:incoming></bpmn:endEvent>
+    <bpmn:startEvent id="start_f29" name="Shipment booked"><bpmn:outgoing>bf_f29</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:endEvent id="end_f46" name="Balance still to ship"><bpmn:incoming>bf_f46</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f30" sourceRef="G_Par" targetRef="T_RecBL" />
+    <bpmn:sequenceFlow id="f31" sourceRef="G_Par" targetRef="T_RecPL" />
+    <bpmn:sequenceFlow id="f32" sourceRef="T_RecBL" targetRef="T_CreateInv" />
+    <bpmn:sequenceFlow id="f33" sourceRef="T_RecPL" targetRef="T_CreateInv" />
+    <bpmn:sequenceFlow id="f35" sourceRef="ST_InvLines" targetRef="T_CorrectInv" />
+    <bpmn:sequenceFlow id="f35b" sourceRef="T_CorrectInv" targetRef="G_CoB" />
+    <bpmn:sequenceFlow id="f36" name="Parkedal" sourceRef="G_CoB" targetRef="ST_InvPark" />
+    <bpmn:sequenceFlow id="f37" name="Pamatec" sourceRef="G_CoB" targetRef="ST_InvPam" />
+    <bpmn:sequenceFlow id="f38" sourceRef="ST_InvPark" targetRef="T_SendInv" />
+    <bpmn:sequenceFlow id="f39" sourceRef="ST_InvPam" targetRef="T_SendInv" />
+    <bpmn:sequenceFlow id="f41" sourceRef="T_SendInv" targetRef="T_RecInvAppr" />
+    <bpmn:sequenceFlow id="f42" sourceRef="T_RecInvAppr" targetRef="T_Fiscal" />
+    <bpmn:sequenceFlow id="f43" sourceRef="T_Fiscal" targetRef="ST_MarkShipped" />
+    <bpmn:sequenceFlow id="f44" sourceRef="ST_MarkShipped" targetRef="T_SendPL" />
+    <bpmn:sequenceFlow id="f45" sourceRef="T_SendPL" targetRef="G_Pend" />
+    <bpmn:sequenceFlow id="f47" name="No, order complete" sourceRef="G_Pend" targetRef="E1" />
+    <bpmn:sequenceFlow id="f34b" sourceRef="T_CreateInv" targetRef="ST_InvLines" />
+    <bpmn:sequenceFlow id="bf_f29" sourceRef="start_f29" targetRef="G_Par" />
+    <bpmn:sequenceFlow id="bf_f46" name="Yes, units pending" sourceRef="G_Pend" targetRef="end_f46" />
+    <bpmn:textAnnotation id="A5"><bpmn:text>The fiscal e-invoice is issued outside this system</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="A4"><bpmn:text>Full vs partial shipment is agreed with the client outside the system</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="as4" sourceRef="T_Fiscal" targetRef="A5" />
+    <bpmn:association id="as5" sourceRef="G_Pend" targetRef="A4" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ch05"><bpmndi:BPMNPlane id="Plane_ch05" bpmnElement="Collab_ch05">
+    <bpmndi:BPMNShape id="P_Park_di" bpmnElement="P_Park" isHorizontal="true">
+      <dc:Bounds x="16" y="97" width="2143" height="621" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Comex_di" bpmnElement="L_Comex" isHorizontal="true">
+      <dc:Bounds x="46" y="97" width="2113" height="365" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Sys_di" bpmnElement="L_Sys" isHorizontal="true">
+      <dc:Bounds x="46" y="462" width="2113" height="256" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Cliente_di" bpmnElement="P_Cliente" isHorizontal="true">
+      <dc:Bounds x="992" y="16" width="736" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Prov_di" bpmnElement="P_Prov" isHorizontal="true">
+      <dc:Bounds x="169" y="755" width="256" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Fwd_di" bpmnElement="P_Fwd" isHorizontal="true">
+      <dc:Bounds x="169" y="16" width="256" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G_Par_di" bpmnElement="G_Par">
+      <dc:Bounds x="177" y="131" width="50" height="50" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_RecBL_di" bpmnElement="T_RecBL">
+      <dc:Bounds x="247" y="116" width="100" height="80" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_RecPL_di" bpmnElement="T_RecPL">
+      <dc:Bounds x="247" y="245" width="100" height="80" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_CreateInv_di" bpmnElement="T_CreateInv">
+      <dc:Bounds x="367" y="115" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_InvLines_di" bpmnElement="ST_InvLines">
+      <dc:Bounds x="487" y="480" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_CorrectInv_di" bpmnElement="T_CorrectInv">
+      <dc:Bounds x="607" y="107" width="104" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G_CoB_di" bpmnElement="G_CoB" isMarkerVisible="true">
+      <dc:Bounds x="773" y="496" width="50" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="728" y="551" width="133" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_InvPark_di" bpmnElement="ST_InvPark">
+      <dc:Bounds x="917" y="472" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_InvPam_di" bpmnElement="ST_InvPam">
+      <dc:Bounds x="917" y="610" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_SendInv_di" bpmnElement="T_SendInv">
+      <dc:Bounds x="1070" y="115" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_RecInvAppr_di" bpmnElement="T_RecInvAppr">
+      <dc:Bounds x="1190" y="107" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Fiscal_di" bpmnElement="T_Fiscal">
+      <dc:Bounds x="1310" y="116" width="100" height="80" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_MarkShipped_di" bpmnElement="ST_MarkShipped">
+      <dc:Bounds x="1430" y="480" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_SendPL_di" bpmnElement="T_SendPL">
+      <dc:Bounds x="1550" y="107" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G_Pend_di" bpmnElement="G_Pend" isMarkerVisible="true">
+      <dc:Bounds x="1689" y="131" width="50" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1666" y="186" width="88" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="E1_di" bpmnElement="E1">
+      <dc:Bounds x="1883" y="138" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1847" y="179" width="109" height="36" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="start_f29_di" bpmnElement="start_f29">
+      <dc:Bounds x="104" y="138" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="87" y="179" width="71" height="36" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="end_f46_di" bpmnElement="end_f46">
+      <dc:Bounds x="2071" y="267" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="2043" y="308" width="92" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="A5_di" bpmnElement="A5">
+      <dc:Bounds x="1235" y="566" width="250" height="46" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="A4_di" bpmnElement="A4">
+      <dc:Bounds x="1589" y="290" width="250" height="62" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f30_di" bpmnElement="f30">
+      <di:waypoint x="227" y="156" />
+      <di:waypoint x="247" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f31_di" bpmnElement="f31">
+      <di:waypoint x="227" y="156" />
+      <di:waypoint x="237" y="156" />
+      <di:waypoint x="237" y="285" />
+      <di:waypoint x="247" y="285" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f32_di" bpmnElement="f32">
+      <di:waypoint x="347" y="156" />
+      <di:waypoint x="367" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f33_di" bpmnElement="f33">
+      <di:waypoint x="347" y="285" />
+      <di:waypoint x="357" y="285" />
+      <di:waypoint x="357" y="156" />
+      <di:waypoint x="367" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f35_di" bpmnElement="f35">
+      <di:waypoint x="587" y="521" />
+      <di:waypoint x="597" y="521" />
+      <di:waypoint x="597" y="156" />
+      <di:waypoint x="607" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f35b_di" bpmnElement="f35b">
+      <di:waypoint x="711" y="156" />
+      <di:waypoint x="721" y="156" />
+      <di:waypoint x="721" y="521" />
+      <di:waypoint x="773" y="521" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f36_di" bpmnElement="f36">
+      <di:waypoint x="823" y="521" />
+      <di:waypoint x="917" y="521" />
+      <bpmndi:BPMNLabel id="BranchLabel_f36"><dc:Bounds x="830" y="496" width="66" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f37_di" bpmnElement="f37">
+      <di:waypoint x="823" y="521" />
+      <di:waypoint x="869" y="521" />
+      <di:waypoint x="869" y="659" />
+      <di:waypoint x="917" y="659" />
+      <bpmndi:BPMNLabel id="BranchLabel_f37"><dc:Bounds x="877" y="581" width="59" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f38_di" bpmnElement="f38">
+      <di:waypoint x="1017" y="521" />
+      <di:waypoint x="1027" y="521" />
+      <di:waypoint x="1027" y="156" />
+      <di:waypoint x="1070" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f39_di" bpmnElement="f39">
+      <di:waypoint x="1017" y="659" />
+      <di:waypoint x="1027" y="659" />
+      <di:waypoint x="1027" y="156" />
+      <di:waypoint x="1070" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f41_di" bpmnElement="f41">
+      <di:waypoint x="1170" y="156" />
+      <di:waypoint x="1190" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f42_di" bpmnElement="f42">
+      <di:waypoint x="1290" y="156" />
+      <di:waypoint x="1310" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f43_di" bpmnElement="f43">
+      <di:waypoint x="1410" y="156" />
+      <di:waypoint x="1420" y="156" />
+      <di:waypoint x="1420" y="521" />
+      <di:waypoint x="1430" y="521" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f44_di" bpmnElement="f44">
+      <di:waypoint x="1530" y="521" />
+      <di:waypoint x="1540" y="521" />
+      <di:waypoint x="1540" y="156" />
+      <di:waypoint x="1550" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f45_di" bpmnElement="f45">
+      <di:waypoint x="1650" y="156" />
+      <di:waypoint x="1689" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f47_di" bpmnElement="f47">
+      <di:waypoint x="1739" y="156" />
+      <di:waypoint x="1883" y="156" />
+      <bpmndi:BPMNLabel id="BranchLabel_f47"><dc:Bounds x="1746" y="131" width="136" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f34b_di" bpmnElement="f34b">
+      <di:waypoint x="467" y="156" />
+      <di:waypoint x="477" y="156" />
+      <di:waypoint x="477" y="521" />
+      <di:waypoint x="487" y="521" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f29_di" bpmnElement="bf_f29">
+      <di:waypoint x="140" y="156" />
+      <di:waypoint x="177" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f46_di" bpmnElement="bf_f46">
+      <di:waypoint x="1739" y="156" />
+      <di:waypoint x="1762" y="156" />
+      <di:waypoint x="1762" y="285" />
+      <di:waypoint x="2071" y="285" />
+      <bpmndi:BPMNLabel id="BranchLabel_bf_f46"><dc:Bounds x="1618" y="255" width="136" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m11_di" bpmnElement="m11">
+      <di:waypoint x="296" y="60" />
+      <di:waypoint x="296" y="116" />
+      <bpmndi:BPMNLabel><dc:Bounds x="305" y="65" width="108" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m12_di" bpmnElement="m12">
+      <di:waypoint x="296" y="755" />
+      <di:waypoint x="296" y="325" />
+      <bpmndi:BPMNLabel><dc:Bounds x="305" y="731" width="94" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m13_di" bpmnElement="m13">
+      <di:waypoint x="1119" y="115" />
+      <di:waypoint x="1119" y="60" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1009" y="65" width="101" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m14_di" bpmnElement="m14">
+      <di:waypoint x="1239" y="60" />
+      <di:waypoint x="1239" y="107" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1248" y="65" width="122" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m15_di" bpmnElement="m15">
+      <di:waypoint x="1599" y="107" />
+      <di:waypoint x="1599" y="60" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1608" y="65" width="233" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="as4_di" bpmnElement="as4">
+      <di:waypoint x="1360" y="196" />
+      <di:waypoint x="1360" y="566" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="as5_di" bpmnElement="as5">
+      <di:waypoint x="1739" y="156" />
+      <di:waypoint x="1772" y="156" />
+      <di:waypoint x="1772" y="290" />
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

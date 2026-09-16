@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_ch02" name="Orders and factory order" targetNamespace="urn:parkedal:order-to-cash" exporter="chapters/tooling/layout.mjs (deterministic)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_ch02">
+    <bpmn:participant id="P_Park" name="Parkedal / Pamatec" processRef="Proc_ch02" />
+    <bpmn:participant id="P_Cliente" name="Client" />
+    <bpmn:participant id="P_Prov" name="Supplier (one or more factories)" />
+    <bpmn:messageFlow id="m4" name="Client purchase order" sourceRef="P_Cliente" targetRef="T_FileSO" />
+    <bpmn:messageFlow id="m5" name="Factory order" sourceRef="T_SendFactory" targetRef="P_Prov" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_ch02" name="Parkedal / Pamatec" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_ch02">
+      <bpmn:lane id="L_Prod" name="Sourcing / Sales">
+        <bpmn:flowNodeRef>T_SendFactory</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_f13</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Comex" name="Foreign trade / Administration">
+        <bpmn:flowNodeRef>T_FileSO</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Sys" name="System">
+        <bpmn:flowNodeRef>ST_OC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Seg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_Fabric</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>ST_Garment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>start_f5</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:serviceTask id="ST_OC" name="Create one purchase order per supplier and the client order"><bpmn:incoming>bf_f5</bpmn:incoming><bpmn:outgoing>f6</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:userTask id="T_FileSO" name="File client purchase order"><bpmn:incoming>f6</bpmn:incoming><bpmn:outgoing>f7</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="G_Seg" name="Client segment?"><bpmn:incoming>f7</bpmn:incoming><bpmn:outgoing>f8</bpmn:outgoing><bpmn:outgoing>f9</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="ST_Fabric" name="Generate factory order (fabric spec)"><bpmn:incoming>f8</bpmn:incoming><bpmn:outgoing>f10</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:serviceTask id="ST_Garment" name="Generate factory order (garment sheet)"><bpmn:incoming>f9</bpmn:incoming><bpmn:outgoing>f11</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:userTask id="T_SendFactory" name="Send factory order to supplier"><bpmn:incoming>f10</bpmn:incoming><bpmn:incoming>f11</bpmn:incoming><bpmn:outgoing>bf_f13</bpmn:outgoing></bpmn:userTask>
+    <bpmn:startEvent id="start_f5" name="Quote lines selected"><bpmn:outgoing>bf_f5</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:endEvent id="end_f13" name="Factory order sent"><bpmn:incoming>bf_f13</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f6" sourceRef="ST_OC" targetRef="T_FileSO" />
+    <bpmn:sequenceFlow id="f7" sourceRef="T_FileSO" targetRef="G_Seg" />
+    <bpmn:sequenceFlow id="f8" name="Fabric" sourceRef="G_Seg" targetRef="ST_Fabric" />
+    <bpmn:sequenceFlow id="f9" name="Finished garment" sourceRef="G_Seg" targetRef="ST_Garment" />
+    <bpmn:sequenceFlow id="f10" sourceRef="ST_Fabric" targetRef="T_SendFactory" />
+    <bpmn:sequenceFlow id="f11" sourceRef="ST_Garment" targetRef="T_SendFactory" />
+    <bpmn:sequenceFlow id="bf_f5" sourceRef="start_f5" targetRef="ST_OC" />
+    <bpmn:sequenceFlow id="bf_f13" sourceRef="T_SendFactory" targetRef="end_f13" />
+    <bpmn:textAnnotation id="A7"><bpmn:text>The client’s own order document arrives later; foreign trade files it</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="as7" sourceRef="T_FileSO" targetRef="A7" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ch02"><bpmndi:BPMNPlane id="Plane_ch02" bpmnElement="Collab_ch02">
+    <bpmndi:BPMNShape id="P_Park_di" bpmnElement="P_Park" isHorizontal="true">
+      <dc:Bounds x="16" y="97" width="1008" height="636" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Prod_di" bpmnElement="L_Prod" isHorizontal="true">
+      <dc:Bounds x="46" y="97" width="978" height="138" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Comex_di" bpmnElement="L_Comex" isHorizontal="true">
+      <dc:Bounds x="46" y="235" width="978" height="242" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Sys_di" bpmnElement="L_Sys" isHorizontal="true">
+      <dc:Bounds x="46" y="477" width="978" height="256" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Cliente_di" bpmnElement="P_Cliente" isHorizontal="true">
+      <dc:Bounds x="290" y="16" width="300" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Prov_di" bpmnElement="P_Prov" isHorizontal="true">
+      <dc:Bounds x="721" y="16" width="256" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_OC_di" bpmnElement="ST_OC">
+      <dc:Bounds x="204" y="487" width="144" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_FileSO_di" bpmnElement="T_FileSO">
+      <dc:Bounds x="368" y="245" width="144" height="80" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G_Seg_di" bpmnElement="G_Seg" isMarkerVisible="true">
+      <dc:Bounds x="543" y="511" width="50" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="529" y="566" width="71" height="36" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_Fabric_di" bpmnElement="ST_Fabric">
+      <dc:Bounds x="649" y="495" width="104" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="ST_Garment_di" bpmnElement="ST_Garment">
+      <dc:Bounds x="649" y="625" width="104" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_SendFactory_di" bpmnElement="T_SendFactory">
+      <dc:Bounds x="799" y="107" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="start_f5_di" bpmnElement="start_f5">
+      <dc:Bounds x="122" y="518" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="96" y="559" width="88" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="end_f13_di" bpmnElement="end_f13">
+      <dc:Bounds x="942" y="130" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="920" y="171" width="81" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="A7_di" bpmnElement="A7">
+      <dc:Bounds x="315" y="615" width="250" height="62" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6">
+      <di:waypoint x="348" y="536" />
+      <di:waypoint x="358" y="536" />
+      <di:waypoint x="358" y="285" />
+      <di:waypoint x="368" y="285" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7">
+      <di:waypoint x="512" y="285" />
+      <di:waypoint x="522" y="285" />
+      <di:waypoint x="522" y="536" />
+      <di:waypoint x="543" y="536" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8">
+      <di:waypoint x="593" y="536" />
+      <di:waypoint x="649" y="536" />
+      <bpmndi:BPMNLabel id="BranchLabel_f8"><dc:Bounds x="595" y="511" width="52" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9">
+      <di:waypoint x="593" y="536" />
+      <di:waypoint x="608" y="536" />
+      <di:waypoint x="608" y="674" />
+      <di:waypoint x="649" y="674" />
+      <bpmndi:BPMNLabel id="BranchLabel_f9"><dc:Bounds x="616" y="596" width="122" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10">
+      <di:waypoint x="753" y="536" />
+      <di:waypoint x="763" y="536" />
+      <di:waypoint x="763" y="148" />
+      <di:waypoint x="799" y="148" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11">
+      <di:waypoint x="753" y="674" />
+      <di:waypoint x="763" y="674" />
+      <di:waypoint x="763" y="148" />
+      <di:waypoint x="799" y="148" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f5_di" bpmnElement="bf_f5">
+      <di:waypoint x="158" y="536" />
+      <di:waypoint x="204" y="536" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f13_di" bpmnElement="bf_f13">
+      <di:waypoint x="899" y="148" />
+      <di:waypoint x="942" y="148" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m4_di" bpmnElement="m4">
+      <di:waypoint x="439" y="60" />
+      <di:waypoint x="439" y="245" />
+      <bpmndi:BPMNLabel><dc:Bounds x="448" y="65" width="157" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m5_di" bpmnElement="m5">
+      <di:waypoint x="848" y="107" />
+      <di:waypoint x="848" y="60" />
+      <bpmndi:BPMNLabel><dc:Bounds x="857" y="65" width="101" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="as7_di" bpmnElement="as7">
+      <di:waypoint x="440" y="325" />
+      <di:waypoint x="440" y="615" />
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

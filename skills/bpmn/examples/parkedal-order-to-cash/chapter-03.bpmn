@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_ch03" name="Production and quality gate" targetNamespace="urn:parkedal:order-to-cash" exporter="chapters/tooling/layout.mjs (deterministic)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_ch03">
+    <bpmn:participant id="P_Park" name="Parkedal / Pamatec" processRef="Proc_ch03" />
+    <bpmn:participant id="P_Prov" name="Supplier (one or more factories)" />
+    <bpmn:messageFlow id="m6" name="Supplier production documents" sourceRef="P_Prov" targetRef="T_Track" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_ch03" name="Parkedal / Pamatec" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_ch03">
+      <bpmn:lane id="L_Prod" name="Sourcing / Sales">
+        <bpmn:flowNodeRef>T_Track</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Handoff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>start_f13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_f19</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Comex" name="Foreign trade / Administration">
+        <bpmn:flowNodeRef>T_QC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_QC</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:userTask id="T_Track" name="Track production milestones"><bpmn:incoming>f18</bpmn:incoming><bpmn:incoming>bf_f13</bpmn:incoming><bpmn:outgoing>f15</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T_QC" name="Check quality‑control status"><bpmn:incoming>f15</bpmn:incoming><bpmn:outgoing>f16</bpmn:outgoing></bpmn:userTask>
+    <bpmn:exclusiveGateway id="G_QC" name="Quality control approved?"><bpmn:incoming>f16</bpmn:incoming><bpmn:outgoing>f17</bpmn:outgoing><bpmn:outgoing>f18</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:task id="T_Handoff" name="Hand over order to foreign trade"><bpmn:incoming>f17</bpmn:incoming><bpmn:outgoing>bf_f19</bpmn:outgoing></bpmn:task>
+    <bpmn:startEvent id="start_f13" name="Factory order sent"><bpmn:outgoing>bf_f13</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:endEvent id="end_f19" name="Order handed to foreign trade"><bpmn:incoming>bf_f19</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f15" sourceRef="T_Track" targetRef="T_QC" />
+    <bpmn:sequenceFlow id="f16" sourceRef="T_QC" targetRef="G_QC" />
+    <bpmn:sequenceFlow id="f17" name="Approved, or overridden with a reason" sourceRef="G_QC" targetRef="T_Handoff" />
+    <bpmn:sequenceFlow id="f18" name="No, still in production" sourceRef="G_QC" targetRef="T_Track" />
+    <bpmn:sequenceFlow id="bf_f13" sourceRef="start_f13" targetRef="T_Track" />
+    <bpmn:sequenceFlow id="bf_f19" sourceRef="T_Handoff" targetRef="end_f19" />
+    <bpmn:textAnnotation id="A6"><bpmn:text>Fabric orders are exempt from this gate (the system computes the exemption)</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="as6" sourceRef="T_QC" targetRef="A6" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ch03"><bpmndi:BPMNPlane id="Plane_ch03" bpmnElement="Collab_ch03">
+    <bpmndi:BPMNShape id="P_Park_di" bpmnElement="P_Park" isHorizontal="true">
+      <dc:Bounds x="16" y="97" width="820" height="422" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Prod_di" bpmnElement="L_Prod" isHorizontal="true">
+      <dc:Bounds x="46" y="97" width="790" height="146" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Comex_di" bpmnElement="L_Comex" isHorizontal="true">
+      <dc:Bounds x="46" y="243" width="790" height="276" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Prov_di" bpmnElement="P_Prov" isHorizontal="true">
+      <dc:Bounds x="109" y="16" width="256" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Track_di" bpmnElement="T_Track">
+      <dc:Bounds x="187" y="115" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_QC_di" bpmnElement="T_QC">
+      <dc:Bounds x="307" y="263" width="121" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G_QC_di" bpmnElement="G_QC" isMarkerVisible="true">
+      <dc:Bounds x="476" y="279" width="50" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="509" y="334" width="105" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Handoff_di" bpmnElement="T_Handoff">
+      <dc:Bounds x="573" y="107" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="start_f13_di" bpmnElement="start_f13">
+      <dc:Bounds x="109" y="138" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="87" y="179" width="81" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="end_f19_di" bpmnElement="end_f19">
+      <dc:Bounds x="735" y="138" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="694" y="179" width="119" height="36" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="A6_di" bpmnElement="A6">
+      <dc:Bounds x="243" y="395" width="250" height="78" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f15_di" bpmnElement="f15">
+      <di:waypoint x="287" y="156" />
+      <di:waypoint x="297" y="156" />
+      <di:waypoint x="297" y="304" />
+      <di:waypoint x="307" y="304" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f16_di" bpmnElement="f16">
+      <di:waypoint x="428" y="304" />
+      <di:waypoint x="476" y="304" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f17_di" bpmnElement="f17">
+      <di:waypoint x="526" y="304" />
+      <di:waypoint x="536" y="304" />
+      <di:waypoint x="536" y="156" />
+      <di:waypoint x="573" y="156" />
+      <bpmndi:BPMNLabel id="BranchLabel_f17"><dc:Bounds x="399" y="178" width="129" height="51" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f18_di" bpmnElement="f18">
+      <di:waypoint x="501" y="329" />
+      <di:waypoint x="501" y="499" />
+      <di:waypoint x="237" y="499" />
+      <di:waypoint x="237" y="197" />
+      <bpmndi:BPMNLabel id="BranchLabel_f18"><dc:Bounds x="509" y="397" width="94" height="35" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f13_di" bpmnElement="bf_f13">
+      <di:waypoint x="145" y="156" />
+      <di:waypoint x="187" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f19_di" bpmnElement="bf_f19">
+      <di:waypoint x="673" y="156" />
+      <di:waypoint x="735" y="156" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m6_di" bpmnElement="m6">
+      <di:waypoint x="236" y="60" />
+      <di:waypoint x="236" y="115" />
+      <bpmndi:BPMNLabel><dc:Bounds x="245" y="65" width="212" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="as6_di" bpmnElement="as6">
+      <di:waypoint x="368" y="345" />
+      <di:waypoint x="368" y="395" />
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

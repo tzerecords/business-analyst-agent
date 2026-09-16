@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_ch01" name="Request and quote" targetNamespace="urn:parkedal:order-to-cash" exporter="chapters/tooling/layout.mjs (deterministic)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_ch01">
+    <bpmn:participant id="P_Park" name="Parkedal / Pamatec" processRef="Proc_ch01" />
+    <bpmn:participant id="P_Cliente" name="Client" />
+    <bpmn:participant id="P_Prov" name="Supplier (one or more factories)" />
+    <bpmn:messageFlow id="m1" name="Order request (client order file)" sourceRef="P_Cliente" targetRef="S1" />
+    <bpmn:messageFlow id="m2" name="Price request" sourceRef="T_AskPrices" targetRef="P_Prov" />
+    <bpmn:messageFlow id="m3" name="Prices and details" sourceRef="P_Prov" targetRef="T_RecPrices" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_ch01" name="Parkedal / Pamatec" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_ch01">
+      <bpmn:lane id="L_Prod" name="Sourcing / Sales">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Standardise</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Reg</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_AskPrices</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RecPrices</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Select</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>end_f5</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Order request received"><bpmn:outgoing>f1</bpmn:outgoing><bpmn:messageEventDefinition id="S1_med" /></bpmn:startEvent>
+    <bpmn:task id="T_Standardise" name="Standardise the request in the pre‑order sheet"><bpmn:incoming>f1</bpmn:incoming><bpmn:outgoing>f1b</bpmn:outgoing></bpmn:task>
+    <bpmn:userTask id="T_Reg" name="Register request and quote"><bpmn:incoming>f1b</bpmn:incoming><bpmn:outgoing>f2</bpmn:outgoing></bpmn:userTask>
+    <bpmn:task id="T_AskPrices" name="Request prices from supplier"><bpmn:incoming>f2</bpmn:incoming><bpmn:outgoing>f3</bpmn:outgoing></bpmn:task>
+    <bpmn:userTask id="T_RecPrices" name="Record supplier prices and specs"><bpmn:incoming>f3</bpmn:incoming><bpmn:outgoing>f4</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T_Select" name="Select winning quote lines"><bpmn:incoming>f4</bpmn:incoming><bpmn:outgoing>bf_f5</bpmn:outgoing></bpmn:userTask>
+    <bpmn:endEvent id="end_f5" name="Quote lines selected"><bpmn:incoming>bf_f5</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="f1" sourceRef="S1" targetRef="T_Standardise" />
+    <bpmn:sequenceFlow id="f1b" sourceRef="T_Standardise" targetRef="T_Reg" />
+    <bpmn:sequenceFlow id="f2" sourceRef="T_Reg" targetRef="T_AskPrices" />
+    <bpmn:sequenceFlow id="f3" sourceRef="T_AskPrices" targetRef="T_RecPrices" />
+    <bpmn:sequenceFlow id="f4" sourceRef="T_RecPrices" targetRef="T_Select" />
+    <bpmn:sequenceFlow id="bf_f5" sourceRef="T_Select" targetRef="end_f5" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_ch01"><bpmndi:BPMNPlane id="Plane_ch01" bpmnElement="Collab_ch01">
+    <bpmndi:BPMNShape id="P_Park_di" bpmnElement="P_Park" isHorizontal="true">
+      <dc:Bounds x="16" y="113" width="917" height="146" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Prod_di" bpmnElement="L_Prod" isHorizontal="true">
+      <dc:Bounds x="56" y="113" width="877" height="146" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Cliente_di" bpmnElement="P_Cliente" isHorizontal="true">
+      <dc:Bounds x="39" y="16" width="210" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Prov_di" bpmnElement="P_Prov" isHorizontal="true">
+      <dc:Bounds x="383" y="16" width="376" height="44" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="S1_di" bpmnElement="S1">
+      <dc:Bounds x="126" y="154" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="97" y="195" width="95" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Standardise_di" bpmnElement="T_Standardise">
+      <dc:Bounds x="211" y="123" width="110" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Reg_di" bpmnElement="T_Reg">
+      <dc:Bounds x="341" y="131" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_AskPrices_di" bpmnElement="T_AskPrices">
+      <dc:Bounds x="461" y="131" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_RecPrices_di" bpmnElement="T_RecPrices">
+      <dc:Bounds x="581" y="123" width="100" height="98" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T_Select_di" bpmnElement="T_Select">
+      <dc:Bounds x="701" y="131" width="100" height="82" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="end_f5_di" bpmnElement="end_f5">
+      <dc:Bounds x="847" y="154" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="821" y="195" width="88" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1">
+      <di:waypoint x="162" y="172" />
+      <di:waypoint x="211" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f1b_di" bpmnElement="f1b">
+      <di:waypoint x="321" y="172" />
+      <di:waypoint x="341" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2">
+      <di:waypoint x="441" y="172" />
+      <di:waypoint x="461" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3">
+      <di:waypoint x="561" y="172" />
+      <di:waypoint x="581" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4">
+      <di:waypoint x="681" y="172" />
+      <di:waypoint x="701" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="bf_f5_di" bpmnElement="bf_f5">
+      <di:waypoint x="801" y="172" />
+      <di:waypoint x="847" y="172" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m1_di" bpmnElement="m1">
+      <di:waypoint x="143" y="60" />
+      <di:waypoint x="143" y="154" />
+      <bpmndi:BPMNLabel><dc:Bounds x="152" y="65" width="143" height="35" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m2_di" bpmnElement="m2">
+      <di:waypoint x="510" y="131" />
+      <di:waypoint x="510" y="60" />
+      <bpmndi:BPMNLabel><dc:Bounds x="400" y="65" width="101" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m3_di" bpmnElement="m3">
+      <di:waypoint x="630" y="60" />
+      <di:waypoint x="630" y="123" />
+      <bpmndi:BPMNLabel><dc:Bounds x="639" y="65" width="136" height="19" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

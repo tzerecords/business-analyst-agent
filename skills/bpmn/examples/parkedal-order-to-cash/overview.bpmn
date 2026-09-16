@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_overview" name="Parkedal order to cash — the whole process" targetNamespace="urn:parkedal:order-to-cash" exporter="chapters/tooling/layout.mjs (deterministic)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_overview">
+    <bpmn:participant id="P_Park" name="Parkedal / Pamatec" processRef="Proc_overview" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_overview" name="Parkedal / Pamatec" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_overview">
+      <bpmn:lane id="L_Prod" name="Sourcing / Sales">
+        <bpmn:flowNodeRef>OV_start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OV_ch01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OV_ch03</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Comex" name="Foreign trade / Administration">
+        <bpmn:flowNodeRef>OV_ch04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OV_ch05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>OV_end</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Sys" name="System">
+        <bpmn:flowNodeRef>OV_ch02</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="OV_start" name="Order request received"><bpmn:outgoing>OVf_start</bpmn:outgoing><bpmn:messageEventDefinition id="OV_start_med" /></bpmn:startEvent>
+    <bpmn:callActivity id="OV_ch01" name="Request and quote" calledElement="Proc_ch01"><bpmn:incoming>OVf_start</bpmn:incoming><bpmn:outgoing>OVf_1</bpmn:outgoing></bpmn:callActivity>
+    <bpmn:callActivity id="OV_ch02" name="Orders and factory order" calledElement="Proc_ch02"><bpmn:incoming>OVf_1</bpmn:incoming><bpmn:outgoing>OVf_2</bpmn:outgoing></bpmn:callActivity>
+    <bpmn:callActivity id="OV_ch03" name="Production and quality gate" calledElement="Proc_ch03"><bpmn:incoming>OVf_2</bpmn:incoming><bpmn:outgoing>OVf_3</bpmn:outgoing></bpmn:callActivity>
+    <bpmn:callActivity id="OV_ch04" name="Proforma" calledElement="Proc_ch04"><bpmn:incoming>OVf_3</bpmn:incoming><bpmn:outgoing>OVf_4</bpmn:outgoing></bpmn:callActivity>
+    <bpmn:callActivity id="OV_ch05" name="Shipment and invoice" calledElement="Proc_ch05"><bpmn:incoming>OVf_4</bpmn:incoming><bpmn:outgoing>OVf_end</bpmn:outgoing></bpmn:callActivity>
+    <bpmn:endEvent id="OV_end" name="Order shipped and invoiced"><bpmn:incoming>OVf_end</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="OVf_start" sourceRef="OV_start" targetRef="OV_ch01" />
+    <bpmn:sequenceFlow id="OVf_1" sourceRef="OV_ch01" targetRef="OV_ch02" />
+    <bpmn:sequenceFlow id="OVf_2" sourceRef="OV_ch02" targetRef="OV_ch03" />
+    <bpmn:sequenceFlow id="OVf_3" sourceRef="OV_ch03" targetRef="OV_ch04" />
+    <bpmn:sequenceFlow id="OVf_4" sourceRef="OV_ch04" targetRef="OV_ch05" />
+    <bpmn:sequenceFlow id="OVf_end" sourceRef="OV_ch05" targetRef="OV_end" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_overview"><bpmndi:BPMNPlane id="Plane_overview" bpmnElement="Collab_overview">
+    <bpmndi:BPMNShape id="P_Park_di" bpmnElement="P_Park" isHorizontal="true">
+      <dc:Bounds x="12" y="12" width="1103" height="342" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Prod_di" bpmnElement="L_Prod" isHorizontal="true">
+      <dc:Bounds x="42" y="12" width="1073" height="132" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Comex_di" bpmnElement="L_Comex" isHorizontal="true">
+      <dc:Bounds x="42" y="144" width="1073" height="116" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Sys_di" bpmnElement="L_Sys" isHorizontal="true">
+      <dc:Bounds x="42" y="260" width="1073" height="94" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_start_di" bpmnElement="OV_start">
+      <dc:Bounds x="136" y="41" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="107" y="82" width="95" height="52" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_ch01_di" bpmnElement="OV_ch01" isExpanded="false">
+      <dc:Bounds x="215" y="23" width="140" height="72" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_ch02_di" bpmnElement="OV_ch02" isExpanded="false">
+      <dc:Bounds x="369" y="268" width="140" height="78" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_ch03_di" bpmnElement="OV_ch03" isExpanded="false">
+      <dc:Bounds x="523" y="20" width="140" height="78" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_ch04_di" bpmnElement="OV_ch04" isExpanded="false">
+      <dc:Bounds x="677" y="155" width="140" height="72" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_ch05_di" bpmnElement="OV_ch05" isExpanded="false">
+      <dc:Bounds x="831" y="152" width="140" height="78" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="OV_end_di" bpmnElement="OV_end">
+      <dc:Bounds x="1022" y="173" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="986" y="214" width="109" height="36" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="OVf_start_di" bpmnElement="OVf_start">
+      <di:waypoint x="172" y="59" />
+      <di:waypoint x="215" y="59" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="OVf_1_di" bpmnElement="OVf_1">
+      <di:waypoint x="355" y="59" />
+      <di:waypoint x="362" y="59" />
+      <di:waypoint x="362" y="307" />
+      <di:waypoint x="369" y="307" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="OVf_2_di" bpmnElement="OVf_2">
+      <di:waypoint x="509" y="307" />
+      <di:waypoint x="516" y="307" />
+      <di:waypoint x="516" y="59" />
+      <di:waypoint x="523" y="59" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="OVf_3_di" bpmnElement="OVf_3">
+      <di:waypoint x="663" y="59" />
+      <di:waypoint x="670" y="59" />
+      <di:waypoint x="670" y="191" />
+      <di:waypoint x="677" y="191" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="OVf_4_di" bpmnElement="OVf_4">
+      <di:waypoint x="817" y="191" />
+      <di:waypoint x="831" y="191" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="OVf_end_di" bpmnElement="OVf_end">
+      <di:waypoint x="971" y="191" />
+      <di:waypoint x="1022" y="191" />
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

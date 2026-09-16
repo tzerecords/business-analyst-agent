@@ -1,6 +1,6 @@
 # business-analyst-agent
 
-*an agent for business analysis work, built one skill at a time*
+*an agent for business analysis work*
 
 **Work in progress.** This repository is built one skill at a time. Today one skill is installable, `bpmn`.
 Everything else is named under Roadmap and cannot be installed yet.

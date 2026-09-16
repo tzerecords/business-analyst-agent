@@ -7,7 +7,7 @@
 **Work in progress.** This repository is built one skill at a time. Today one skill is installable, `bpmn`.
 Everything else is named under Roadmap and cannot be installed yet.
 
-## bpmn
+## bpmn, Business Process Model and Notation
 
 Turns a written process into a BPMN 2.0 diagram: it asks when the description has gaps, lays the shapes out from the meaning alone so one description always gives one geometry, checks the result, and renders it to look at. BPMN is Business Process Model and Notation, the standard for drawing a business process published by the Object Management Group.
 

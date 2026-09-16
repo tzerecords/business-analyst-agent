@@ -1,4 +1,4 @@
-# bpmn
+# bpmn, Business Process Model and Notation
 Turns a written process description into a Business Process Model and Notation (BPMN) 2.0 diagram, checked and rendered.
 
 ## When to use

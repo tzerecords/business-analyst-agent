@@ -1,0 +1,29 @@
+{
+  "name": "business-analyst",
+  "version": "0.1.0",
+  "description": "Business analysis skills. Ships bpmn, which draws a process as a BPMN 2.0 Descriptive diagram and checks it for notation and readability.",
+  "author": {
+    "name": "Matias Was",
+    "url": "https://github.com/tzerecords"
+  },
+  "homepage": "https://github.com/tzerecords/matias-was",
+  "repository": "https://github.com/tzerecords/matias-was",
+  "license": "MIT",
+  "keywords": ["bpmn", "business-analysis", "process-modeling", "diagram"],
+  "skills": "./",
+  "interface": {
+    "displayName": "Business Analyst",
+    "shortDescription": "Business analysis artefacts, one skill per artefact",
+    "longDescription": "Write a process as a specification of meaning, generate a BPMN 2.0 Descriptive diagram from it, and check the result for notation and readability before anyone reads it.",
+    "developerName": "Matias Was",
+    "category": "Productivity",
+    "capabilities": ["Skills"],
+    "websiteURL": "https://github.com/tzerecords/matias-was",
+    "defaultPrompt": [
+      "Map our order to cash process as a BPMN diagram from these interview notes.",
+      "Draw the purchase approval flow, with finance as a separate lane and the supplier as an outside party.",
+      "Check this BPMN file for notation and readability problems."
+    ],
+    "brandColor": "#111111"
+  }
+}

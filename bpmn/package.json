@@ -1,0 +1,18 @@
+{
+  "name": "bpmn-toolkit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic BPMN 2.0 generator and a one-command checker for the files it writes.",
+  "license": "MIT",
+  "scripts": {
+    "generate": "node scripts/generate.mjs",
+    "check": "node scripts/check.mjs",
+    "postinstall": "npx playwright install chromium"
+  },
+  "devDependencies": {
+    "bpmn-js": "18.28.0",
+    "bpmnlint": "11.14.0",
+    "playwright": "1.63.0"
+  }
+}

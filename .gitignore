@@ -1,0 +1,6 @@
+node_modules/
+**/scripts/xsd/
+out/
+render/
+out.bpmn
+.DS_Store

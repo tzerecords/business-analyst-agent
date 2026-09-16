@@ -1,0 +1,58 @@
+{
+  "id": "Defs_PurchaseRequest",
+  "name": "Purchase request approval",
+  "documentation": "Generic purchase request approval process, written to exercise the notation rather than to describe any one company. Descriptive conformance sub-class of OMG BPMN 2.0.",
+  "targetNamespace": "http://example.com/bpmn/purchase-request",
+  "collaborationId": "Collab_PurchaseRequest",
+  "pools": [
+    { "id": "P_Requester", "name": "Requester", "blackBox": true, "documentation": "Black box pool: the requester is outside the scope of this model, so only the messages exchanged with the company are shown." },
+    {
+      "id": "P_Company",
+      "name": "Company",
+      "processId": "Proc_Company",
+      "lanes": [
+        { "id": "L_Purchasing", "name": "Purchasing" },
+        { "id": "L_Finance", "name": "Finance" }
+      ]
+    }
+  ],
+  "nodes": [
+    { "id": "S1", "type": "startEvent", "eventDef": "message", "name": "Purchase request received", "lane": "L_Purchasing", "documentation": "The process starts when a request arrives from the requester." },
+    { "id": "T1", "type": "userTask", "name": "Register purchase request", "lane": "L_Purchasing", "documentation": "The request is recorded with a reference number." },
+    { "id": "T2", "type": "userTask", "name": "Check request against purchasing policy", "lane": "L_Purchasing", "documentation": "Category, quantity and preferred supplier are checked against the written policy." },
+    { "id": "T3", "type": "userTask", "name": "Collect supplier quotes", "lane": "L_Purchasing", "documentation": "At least one quote is collected, more when the policy asks for a comparison." },
+    { "id": "T4", "type": "userTask", "name": "Prepare purchase order", "lane": "L_Purchasing", "documentation": "The purchase order is drafted from the chosen quote." },
+    { "id": "G1", "type": "exclusiveGateway", "name": "Order value above the approval limit?", "lane": "L_Purchasing", "documentation": "The single decision point of the process." },
+    { "id": "T5", "type": "userTask", "name": "Send purchase order to the supplier", "lane": "L_Purchasing", "documentation": "Path taken when the order stays within the limit that purchasing may approve on its own." },
+    { "id": "E1", "type": "endEvent", "name": "Order placed", "lane": "L_Purchasing", "documentation": "End of the path that needs no financial approval." },
+    { "id": "T6", "type": "userTask", "name": "Check budget availability", "lane": "L_Finance", "documentation": "Finance confirms that the cost centre still holds the amount." },
+    { "id": "T7", "type": "userTask", "name": "Record the approval decision", "lane": "L_Finance", "documentation": "The decision and its reason are written on the request." },
+    { "id": "T8", "type": "userTask", "name": "Inform the requester of the decision", "lane": "L_Finance", "documentation": "The requester is told what was decided and what happens next." },
+    { "id": "E2", "type": "endEvent", "name": "Decision communicated", "lane": "L_Finance", "documentation": "End of the path that goes through financial approval." },
+    { "id": "D1", "type": "dataObject", "name": "Purchase order", "anchor": "T4", "documentation": "The document produced by the drafting task and carried through the rest of the process." },
+    { "id": "A1", "type": "annotation", "text": "The approval limit is set in the purchasing policy and reviewed once a year.", "anchor": "T2" }
+  ],
+  "sequenceFlows": [
+    { "id": "f1", "source": "S1", "target": "T1" },
+    { "id": "f2", "source": "T1", "target": "T2" },
+    { "id": "f3", "source": "T2", "target": "T3" },
+    { "id": "f4", "source": "T3", "target": "T4" },
+    { "id": "f5", "source": "T4", "target": "G1" },
+    { "id": "f6", "source": "G1", "target": "T5", "name": "Within the limit" },
+    { "id": "f7", "source": "T5", "target": "E1" },
+    { "id": "f8", "source": "G1", "target": "T6", "name": "Above the limit" },
+    { "id": "f9", "source": "T6", "target": "T7" },
+    { "id": "f10", "source": "T7", "target": "T8" },
+    { "id": "f11", "source": "T8", "target": "E2" }
+  ],
+  "messageFlows": [
+    { "id": "m1", "source": "P_Requester", "target": "S1", "name": "Purchase request", "documentation": "The request form sent by the requester." },
+    { "id": "m2", "source": "T8", "target": "P_Requester", "name": "Approval decision", "documentation": "The answer returned to the requester." }
+  ],
+  "associations": [
+    { "id": "as1", "source": "T2", "target": "A1" }
+  ],
+  "dataAssociations": [
+    { "id": "da1", "source": "T4", "target": "D1" }
+  ]
+}

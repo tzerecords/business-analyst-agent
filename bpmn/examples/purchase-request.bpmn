@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs_PurchaseRequest" name="Purchase request approval" targetNamespace="http://example.com/bpmn/purchase-request" exporter="generate.mjs (deterministic layout)" exporterVersion="1.0">
+  <bpmn:collaboration id="Collab_PurchaseRequest">
+    <bpmn:documentation>Generic purchase request approval process, written to exercise the notation rather than to describe any one company. Descriptive conformance sub-class of OMG BPMN 2.0.</bpmn:documentation>
+    <bpmn:participant id="P_Requester" name="Requester"><bpmn:documentation>Black box pool: the requester is outside the scope of this model, so only the messages exchanged with the company are shown.</bpmn:documentation></bpmn:participant>
+    <bpmn:participant id="P_Company" name="Company" processRef="Proc_Company" />
+    <bpmn:messageFlow id="m1" name="Purchase request" sourceRef="P_Requester" targetRef="S1"><bpmn:documentation>The request form sent by the requester.</bpmn:documentation></bpmn:messageFlow>
+    <bpmn:messageFlow id="m2" name="Approval decision" sourceRef="T8" targetRef="P_Requester"><bpmn:documentation>The answer returned to the requester.</bpmn:documentation></bpmn:messageFlow>
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_Company" name="Company" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_Proc_Company">
+      <bpmn:lane id="L_Purchasing" name="Purchasing">
+        <bpmn:flowNodeRef>S1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T3</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T5</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Finance" name="Finance">
+        <bpmn:flowNodeRef>T6</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T7</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T8</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E2</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S1" name="Purchase request received"><bpmn:documentation>The process starts when a request arrives from the requester.</bpmn:documentation><bpmn:outgoing>f1</bpmn:outgoing><bpmn:messageEventDefinition id="S1_med" /></bpmn:startEvent>
+    <bpmn:userTask id="T1" name="Register purchase request"><bpmn:documentation>The request is recorded with a reference number.</bpmn:documentation><bpmn:incoming>f1</bpmn:incoming><bpmn:outgoing>f2</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T2" name="Check request against purchasing policy"><bpmn:documentation>Category, quantity and preferred supplier are checked against the written policy.</bpmn:documentation><bpmn:incoming>f2</bpmn:incoming><bpmn:outgoing>f3</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T3" name="Collect supplier quotes"><bpmn:documentation>At least one quote is collected, more when the policy asks for a comparison.</bpmn:documentation><bpmn:incoming>f3</bpmn:incoming><bpmn:outgoing>f4</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T4" name="Prepare purchase order"><bpmn:documentation>The purchase order is drafted from the chosen quote.</bpmn:documentation><bpmn:incoming>f4</bpmn:incoming><bpmn:outgoing>f5</bpmn:outgoing><bpmn:ioSpecification id="IO_T4"><bpmn:dataOutput id="DOut_da1" /><bpmn:inputSet id="IS_T4"></bpmn:inputSet><bpmn:outputSet id="OS_T4"><bpmn:dataOutputRefs>DOut_da1</bpmn:dataOutputRefs></bpmn:outputSet></bpmn:ioSpecification><bpmn:dataOutputAssociation id="da1"><bpmn:sourceRef>DOut_da1</bpmn:sourceRef><bpmn:targetRef>D1</bpmn:targetRef></bpmn:dataOutputAssociation></bpmn:userTask>
+    <bpmn:exclusiveGateway id="G1" name="Order value above the approval limit?"><bpmn:documentation>The single decision point of the process.</bpmn:documentation><bpmn:incoming>f5</bpmn:incoming><bpmn:outgoing>f6</bpmn:outgoing><bpmn:outgoing>f8</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:userTask id="T5" name="Send purchase order to the supplier"><bpmn:documentation>Path taken when the order stays within the limit that purchasing may approve on its own.</bpmn:documentation><bpmn:incoming>f6</bpmn:incoming><bpmn:outgoing>f7</bpmn:outgoing></bpmn:userTask>
+    <bpmn:endEvent id="E1" name="Order placed"><bpmn:documentation>End of the path that needs no financial approval.</bpmn:documentation><bpmn:incoming>f7</bpmn:incoming></bpmn:endEvent>
+    <bpmn:userTask id="T6" name="Check budget availability"><bpmn:documentation>Finance confirms that the cost centre still holds the amount.</bpmn:documentation><bpmn:incoming>f8</bpmn:incoming><bpmn:outgoing>f9</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T7" name="Record the approval decision"><bpmn:documentation>The decision and its reason are written on the request.</bpmn:documentation><bpmn:incoming>f9</bpmn:incoming><bpmn:outgoing>f10</bpmn:outgoing></bpmn:userTask>
+    <bpmn:userTask id="T8" name="Inform the requester of the decision"><bpmn:documentation>The requester is told what was decided and what happens next.</bpmn:documentation><bpmn:incoming>f10</bpmn:incoming><bpmn:outgoing>f11</bpmn:outgoing></bpmn:userTask>
+    <bpmn:endEvent id="E2" name="Decision communicated"><bpmn:documentation>End of the path that goes through financial approval.</bpmn:documentation><bpmn:incoming>f11</bpmn:incoming></bpmn:endEvent>
+    <bpmn:dataObject id="DO_D1" />
+    <bpmn:dataObjectReference id="D1" name="Purchase order" dataObjectRef="DO_D1"><bpmn:documentation>The document produced by the drafting task and carried through the rest of the process.</bpmn:documentation></bpmn:dataObjectReference>
+    <bpmn:sequenceFlow id="f1" sourceRef="S1" targetRef="T1" />
+    <bpmn:sequenceFlow id="f2" sourceRef="T1" targetRef="T2" />
+    <bpmn:sequenceFlow id="f3" sourceRef="T2" targetRef="T3" />
+    <bpmn:sequenceFlow id="f4" sourceRef="T3" targetRef="T4" />
+    <bpmn:sequenceFlow id="f5" sourceRef="T4" targetRef="G1" />
+    <bpmn:sequenceFlow id="f6" name="Within the limit" sourceRef="G1" targetRef="T5" />
+    <bpmn:sequenceFlow id="f7" sourceRef="T5" targetRef="E1" />
+    <bpmn:sequenceFlow id="f8" name="Above the limit" sourceRef="G1" targetRef="T6" />
+    <bpmn:sequenceFlow id="f9" sourceRef="T6" targetRef="T7" />
+    <bpmn:sequenceFlow id="f10" sourceRef="T7" targetRef="T8" />
+    <bpmn:sequenceFlow id="f11" sourceRef="T8" targetRef="E2" />
+    <bpmn:textAnnotation id="A1"><bpmn:text>The approval limit is set in the purchasing policy and reviewed once a year.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="as1" sourceRef="T2" targetRef="A1" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1"><bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collab_PurchaseRequest">
+    <bpmndi:BPMNShape id="P_Requester_di" bpmnElement="P_Requester" isHorizontal="true">
+      <dc:Bounds x="20" y="20" width="1450" height="50" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="P_Company_di" bpmnElement="P_Company" isHorizontal="true">
+      <dc:Bounds x="20" y="110" width="1450" height="660" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Purchasing_di" bpmnElement="L_Purchasing" isHorizontal="true">
+      <dc:Bounds x="50" y="110" width="1420" height="330" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="L_Finance_di" bpmnElement="L_Finance" isHorizontal="true">
+      <dc:Bounds x="50" y="440" width="1420" height="330" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="S1_di" bpmnElement="S1">
+      <dc:Bounds x="102" y="237" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="70" y="277" width="100" height="28" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T1_di" bpmnElement="T1">
+      <dc:Bounds x="205" y="210" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T2_di" bpmnElement="T2">
+      <dc:Bounds x="345" y="210" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T3_di" bpmnElement="T3">
+      <dc:Bounds x="485" y="210" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T4_di" bpmnElement="T4">
+      <dc:Bounds x="625" y="210" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="G1_di" bpmnElement="G1">
+      <dc:Bounds x="795" y="230" width="50" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="770" y="284" width="100" height="28" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T5_di" bpmnElement="T5">
+      <dc:Bounds x="905" y="210" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="E1_di" bpmnElement="E1">
+      <dc:Bounds x="1082" y="237" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1050" y="277" width="100" height="28" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T6_di" bpmnElement="T6">
+      <dc:Bounds x="905" y="540" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T7_di" bpmnElement="T7">
+      <dc:Bounds x="1045" y="540" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="T8_di" bpmnElement="T8">
+      <dc:Bounds x="1185" y="540" width="110" height="90" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="E2_di" bpmnElement="E2">
+      <dc:Bounds x="1362" y="567" width="36" height="36" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1330" y="607" width="100" height="28" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="D1_di" bpmnElement="D1">
+      <dc:Bounds x="625" y="112" width="36" height="50" />
+      <bpmndi:BPMNLabel><dc:Bounds x="597" y="166" width="92" height="28" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNShape id="A1_di" bpmnElement="A1">
+      <dc:Bounds x="310" y="308" width="180" height="55" />
+    </bpmndi:BPMNShape>
+    <bpmndi:BPMNEdge id="f1_di" bpmnElement="f1">
+      <di:waypoint x="138" y="255" />
+      <di:waypoint x="205" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f2_di" bpmnElement="f2">
+      <di:waypoint x="315" y="255" />
+      <di:waypoint x="345" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f3_di" bpmnElement="f3">
+      <di:waypoint x="455" y="255" />
+      <di:waypoint x="485" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f4_di" bpmnElement="f4">
+      <di:waypoint x="595" y="255" />
+      <di:waypoint x="625" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f5_di" bpmnElement="f5">
+      <di:waypoint x="735" y="255" />
+      <di:waypoint x="795" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f6_di" bpmnElement="f6">
+      <di:waypoint x="845" y="255" />
+      <di:waypoint x="905" y="255" />
+      <bpmndi:BPMNLabel><dc:Bounds x="809" y="235" width="90" height="16" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f7_di" bpmnElement="f7">
+      <di:waypoint x="1015" y="255" />
+      <di:waypoint x="1082" y="255" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f8_di" bpmnElement="f8">
+      <di:waypoint x="845" y="255" />
+      <di:waypoint x="875" y="255" />
+      <di:waypoint x="875" y="585" />
+      <di:waypoint x="905" y="585" />
+      <bpmndi:BPMNLabel><dc:Bounds x="809" y="565" width="90" height="16" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f9_di" bpmnElement="f9">
+      <di:waypoint x="1015" y="585" />
+      <di:waypoint x="1045" y="585" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f10_di" bpmnElement="f10">
+      <di:waypoint x="1155" y="585" />
+      <di:waypoint x="1185" y="585" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="f11_di" bpmnElement="f11">
+      <di:waypoint x="1295" y="585" />
+      <di:waypoint x="1362" y="585" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m1_di" bpmnElement="m1">
+      <di:waypoint x="130" y="70" />
+      <di:waypoint x="130" y="237" />
+      <bpmndi:BPMNLabel><dc:Bounds x="136" y="76" width="110" height="16" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="m2_di" bpmnElement="m2">
+      <di:waypoint x="1264" y="540" />
+      <di:waypoint x="1264" y="70" />
+      <bpmndi:BPMNLabel><dc:Bounds x="1270" y="76" width="110" height="16" /></bpmndi:BPMNLabel>
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="as1_di" bpmnElement="as1">
+      <di:waypoint x="400" y="300" />
+      <di:waypoint x="400" y="308" />
+    </bpmndi:BPMNEdge>
+    <bpmndi:BPMNEdge id="da1_di" bpmnElement="da1">
+      <di:waypoint x="643" y="210" />
+      <di:waypoint x="643" y="162" />
+    </bpmndi:BPMNEdge>
+  </bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</bpmn:definitions>

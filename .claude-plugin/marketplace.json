@@ -1,0 +1,27 @@
+{
+  "name": "matias-was",
+  "description": "Business analysis skills for Claude Code, published one skill at a time.",
+  "owner": {
+    "name": "Matias Was",
+    "url": "https://github.com/tzerecords"
+  },
+  "plugins": [
+    {
+      "name": "business-analyst",
+      "source": "./",
+      "description": "Business analysis skills. Ships bpmn, which draws a process as a BPMN 2.0 Descriptive diagram and checks it for notation and readability.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Matias Was"
+      },
+      "homepage": "https://github.com/tzerecords/matias-was",
+      "license": "MIT",
+      "keywords": [
+        "bpmn",
+        "business-analysis",
+        "process-modeling",
+        "diagram"
+      ]
+    }
+  ]
+}

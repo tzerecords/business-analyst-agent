@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "business-analyst",
+  "version": "0.1.0",
+  "description": "Business analysis skills. Ships bpmn, which draws a process as a BPMN 2.0 Descriptive diagram and checks it for notation and readability.",
+  "author": { "name": "Matias Was", "url": "https://github.com/tzerecords" },
+  "homepage": "https://github.com/tzerecords/business-analyst-agent",
+  "repository": "https://github.com/tzerecords/business-analyst-agent",
+  "license": "MIT",
+  "keywords": ["bpmn", "business-analysis", "process-modeling", "diagram"]
+}

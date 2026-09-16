@@ -10,7 +10,7 @@
   "repository": "https://github.com/tzerecords/business-analyst-agent",
   "license": "MIT",
   "keywords": ["bpmn", "business-analysis", "process-modeling", "diagram"],
-  "skills": "./",
+  "skills": "./skills/",
   "interface": {
     "displayName": "Business Analyst",
     "shortDescription": "Business analysis artefacts, one skill per artefact",

@@ -10,7 +10,7 @@ the Descriptive conformance sub-class: the subset of shapes a business reader
 follows without training. No condition expressions and no service bindings, so no
 workflow engine runs the output. A `.bpmn` file drawn by hand elsewhere is never
 read back; write its meaning as a fresh spec. Format reference and the
-Descriptive element table: `bpmn/SKILL.md`.
+Descriptive element table: `skills/bpmn/SKILL.md`.
 
 1. **List what the description holds.** Actors (one pool per organisation, one
    lane per role, a black box pool for an outside party whose internal steps are
@@ -25,13 +25,13 @@ Descriptive element table: `bpmn/SKILL.md`.
    `exclusiveGateway`, `parallelGateway`, collapsed `subProcess`.
    Every flow node carries a `lane` and a `documentation` note, and every gateway
    outflow carries a name. Worked example:
-   `bpmn/examples/purchase-request.spec.json`.
+   `skills/bpmn/examples/purchase-request.spec.json`.
 3. **Size the levels first.** At most ten activities per process level (Bruce
    Silver, BPMN Method and Style, style rule 0005) and at most fifty elements in
    the model (Seven Process Modeling Guidelines, guideline 7, Mendling, Reijers
    and van der Aalst, 2010). Past either ceiling, move a contiguous run of steps
    into a collapsed sub-process named after the phase the business already uses.
-4. **Generate, then check.** Run both from `bpmn/`.
+4. **Generate, then check.** Run both from `skills/bpmn/`.
 
 ```bash
 npm install                                              # once per install

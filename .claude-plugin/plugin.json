@@ -10,5 +10,5 @@
   "repository": "https://github.com/tzerecords/business-analyst-agent",
   "license": "MIT",
   "keywords": ["bpmn", "business-analysis", "process-modeling", "diagram"],
-  "skills": ["./bpmn"]
+  "skills": ["./skills/bpmn"]
 }

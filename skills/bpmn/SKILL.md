@@ -191,7 +191,7 @@ reads well, `Steps 4 to 9` does not.
 
 #### 5. Generate, check, fix the spec
 
-Run these from the folder that holds this SKILL.md: `bpmn/` in a clone of the
+Run these from the folder that holds this SKILL.md: `skills/bpmn/` in a clone of the
 repository, or the skill folder itself once the skill is installed.
 
 ```bash

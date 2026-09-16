@@ -1,6 +1,8 @@
-# business-analyst-agent
+<p align="center"><img src="assets/logo.png" width="220" alt="business-analyst-agent"></p>
 
-*an agent for business analysis work*
+<h1 align="center">business-analyst-agent</h1>
+
+<p align="center"><em>an agent for business analysis work</em></p>
 
 **Work in progress.** This repository is built one skill at a time. Today one skill is installable, `bpmn`.
 Everything else is named under Roadmap and cannot be installed yet.
